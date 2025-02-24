@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Dispatch problems with pypsa &#8212; PyPSA Workshop at Gasunie</title>
+    <title>Economic Dispatch &#8212; PyPSA Workshop at Gasunie</title>
   
   
   
@@ -63,7 +63,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Capacity expansion planning with pypsa" href="02-pypsa-investment.html" />
+    <link rel="next" title="Capacity Expansion Planning" href="02-pypsa-investment.html" />
     <link rel="prev" title="PyPSA Introduction" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -177,11 +177,11 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dispatch problems with <code class="docutils literal notranslate"><span class="pre">pypsa</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-pypsa-investment.html">Capacity expansion planning with <code class="docutils literal notranslate"><span class="pre">pypsa</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-pypsa-sectors.html">Sector-coupling with <code class="docutils literal notranslate"><span class="pre">pypsa</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="annex-01-python.html">Introduction to the basics of <code class="docutils literal notranslate"><span class="pre">Python</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="annex-02-pandas.html">Tabular data analysis with <code class="docutils literal notranslate"><span class="pre">pandas</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Economic Dispatch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-pypsa-investment.html">Capacity Expansion Planning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-pypsa-sectors.html">Sector Coupling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annex-01-python.html">Annex: Intro to <code class="docutils literal notranslate"><span class="pre">Python</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="annex-02-pandas.html">Annex: Intro to <code class="docutils literal notranslate"><span class="pre">pandas</span></code></a></li>
 </ul>
 
     </div>
@@ -398,7 +398,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Dispatch problems with pypsa</h1>
+    <h1>Economic Dispatch</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -426,8 +426,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="dispatch-problems-with-pypsa">
-<h1>Dispatch problems with <code class="docutils literal notranslate"><span class="pre">pypsa</span></code><a class="headerlink" href="#dispatch-problems-with-pypsa" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="economic-dispatch">
+<h1>Economic Dispatch<a class="headerlink" href="#economic-dispatch" title="Link to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you have not yet set up Python on your computer, you can execute this tutorial in your browser via <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>. Click on the rocket in the top right corner and launch “Colab”. If that doesn’t work download the <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> file and import it in <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>.</p>
@@ -440,13 +440,13 @@ document.write(`
 <h2>From structured data to optimisation<a class="headerlink" href="#from-structured-data-to-optimisation" title="Link to this heading">#</a></h2>
 <p>The design principle of PyPSA is that each component is associated with a set of variables and constraints that will be added to the optimisation model based on the input data stored for the components.</p>
 <p>For an <em>hourly</em> electricity market simulation, PyPSA will solve an optimisation problem that looks like this</p>
-<div class="amsmath math notranslate nohighlight" id="equation-0a8b1a39-3da3-4230-8cc6-c5ca4be75bf7">
-<span class="eqno">(1)<a class="headerlink" href="#equation-0a8b1a39-3da3-4230-8cc6-c5ca4be75bf7" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-40d0018f-39bb-4937-aba9-e986d9c36109">
+<span class="eqno">(1)<a class="headerlink" href="#equation-40d0018f-39bb-4937-aba9-e986d9c36109" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \min_{g_{i,s,t}; f_{\ell,t}; g_{i,r,t,\text{charge}}; g_{i,r,t,\text{discharge}}; e_{i,r,t}} \sum_s o_{s} g_{i,s,t}
 \end{equation}\]</div>
 <p>such that</p>
-<div class="amsmath math notranslate nohighlight" id="equation-07f6c641-7733-432b-85a7-426ffa1793c2">
-<span class="eqno">(2)<a class="headerlink" href="#equation-07f6c641-7733-432b-85a7-426ffa1793c2" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-2767f08c-887b-4ac8-b75d-37ce37df9e59">
+<span class="eqno">(2)<a class="headerlink" href="#equation-2767f08c-887b-4ac8-b75d-37ce37df9e59" title="Permalink to this equation">#</a></span>\[\begin{align}
 0 &amp; \leq g_{i,s,t} \leq \hat{g}_{i,s,t} G_{i,s}  &amp; \text{generation limits : generator} \\
 -F_\ell &amp;\leq f_{\ell,t} \leq F_\ell &amp; \text{transmission limits : line}  \\
 d_{i,t} &amp;= \sum_s g_{i,s,t} + \sum_r g_{i,r,t,\text{discharge}} - \sum_r g_{i,r,t,\text{charge}} - \sum_\ell K_{i\ell} f_{\ell,t} &amp; \text{KCL : bus} \\
@@ -1041,12 +1041,12 @@ Presolving model
 0 rows, 0 cols, 0 nonzeros  0s
 Presolve : Reductions: rows 0(-14); columns 0(-6); elements 0(-19) - Reduced to empty
 Solving the original LP from the solution after postsolve
-Model name          : linopy-problem-icnurd_m
+Model name          : linopy-problem-sjx514ap
 Model status        : Optimal
 Objective value     :  1.3813912524e+06
 Relative P-D gap    :  0.0000000000e+00
 HiGHS run time      :          0.00
-Writing the solution to /tmp/linopy-solve-0mo0qbd9.sol
+Writing the solution to /tmp/linopy-solve-qqik237m.sol
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;ok&#39;, &#39;optimal&#39;)
@@ -1423,12 +1423,12 @@ Writing the solution to /tmp/linopy-solve-0mo0qbd9.sol
 Index([&#39;A-B&#39;], dtype=&#39;object&#39;, name=&#39;Line&#39;)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
-Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
-</pre></div>
-</div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following sub_networks have carriers which are not defined:
 Index([&#39;0&#39;], dtype=&#39;object&#39;, name=&#39;SubNetwork&#39;)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
+Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:linopy.model: Solve problem using Highs solver
@@ -1460,12 +1460,12 @@ Presolving model
 0 rows, 0 cols, 0 nonzeros  0s
 Presolve : Reductions: rows 0(-14); columns 0(-6); elements 0(-19) - Reduced to empty
 Solving the original LP from the solution after postsolve
-Model name          : linopy-problem-zit98rp1
+Model name          : linopy-problem-j1xggwqu
 Model status        : Optimal
 Objective value     :  1.3986326317e+06
 Relative P-D gap    :  3.3294038530e-16
 HiGHS run time      :          0.00
-Writing the solution to /tmp/linopy-solve-3dspm88l.sol
+Writing the solution to /tmp/linopy-solve-ykxff31h.sol
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;ok&#39;, &#39;optimal&#39;)
@@ -1632,12 +1632,12 @@ Value: 1398632.6317348
 Index([&#39;A-B&#39;], dtype=&#39;object&#39;, name=&#39;Line&#39;)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
-Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
-</pre></div>
-</div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following sub_networks have carriers which are not defined:
 Index([&#39;0&#39;], dtype=&#39;object&#39;, name=&#39;SubNetwork&#39;)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
+Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:linopy.model: Solve problem using Highs solver
@@ -1669,12 +1669,12 @@ Presolving model
 0 rows, 0 cols, 0 nonzeros  0s
 Presolve : Reductions: rows 0(-14); columns 0(-6); elements 0(-19) - Reduced to empty
 Solving the original LP from the solution after postsolve
-Model name          : linopy-problem-p1perapb
+Model name          : linopy-problem-cai648oa
 Model status        : Optimal
 Objective value     :  1.4675981490e+06
 Relative P-D gap    :  0.0000000000e+00
 HiGHS run time      :          0.00
-Writing the solution to /tmp/linopy-solve-8nlctfci.sol
+Writing the solution to /tmp/linopy-solve-_fbz3x_8.sol
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1743,12 +1743,12 @@ Writing the solution to /tmp/linopy-solve-8nlctfci.sol
 Index([&#39;A-B&#39;], dtype=&#39;object&#39;, name=&#39;Line&#39;)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
-Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
-</pre></div>
-</div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following sub_networks have carriers which are not defined:
 Index([&#39;0&#39;], dtype=&#39;object&#39;, name=&#39;SubNetwork&#39;)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
+Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:linopy.model: Solve problem using Highs solver
@@ -1785,13 +1785,13 @@ Using EKK dual simplex solver - serial
           0     0.0000000000e+00 Pr: 1(36000) 0s
           1     9.8562770563e+05 Pr: 0(0) 0s
 Solving the original LP from the solution after postsolve
-Model name          : linopy-problem-_vrr4g_a
+Model name          : linopy-problem-d9bzq9fc
 Model status        : Optimal
 Simplex   iterations: 1
 Objective value     :  9.8562770563e+05
 Relative P-D gap    :  9.4490299867e-16
 HiGHS run time      :          0.00
-Writing the solution to /tmp/linopy-solve-gqde3mm6.sol
+Writing the solution to /tmp/linopy-solve-a2sdd2f6.sol
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1854,20 +1854,20 @@ Writing the solution to /tmp/linopy-solve-gqde3mm6.sol
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following generators have carriers which are not defined:
-Index([&#39;A nuclear&#39;], dtype=&#39;object&#39;, name=&#39;Generator&#39;)
-</pre></div>
-</div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following lines have carriers which are not defined:
 Index([&#39;A-B&#39;], dtype=&#39;object&#39;, name=&#39;Line&#39;)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
-Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following generators have carriers which are not defined:
+Index([&#39;A nuclear&#39;], dtype=&#39;object&#39;, name=&#39;Generator&#39;)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following sub_networks have carriers which are not defined:
 Index([&#39;0&#39;], dtype=&#39;object&#39;, name=&#39;SubNetwork&#39;)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:pypsa.consistency:The following buses have carriers which are not defined:
+Index([&#39;A&#39;, &#39;B&#39;], dtype=&#39;object&#39;, name=&#39;Bus&#39;)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:linopy.model: Solve problem using Highs solver
@@ -1899,12 +1899,12 @@ Presolving model
 0 rows, 0 cols, 0 nonzeros  0s
 Presolve : Reductions: rows 0(-16); columns 0(-7); elements 0(-22) - Reduced to empty
 Solving the original LP from the solution after postsolve
-Model name          : linopy-problem-s2ylblli
+Model name          : linopy-problem-f0y0hg2n
 Model status        : Optimal
 Objective value     :  8.6848484848e+05
 Relative P-D gap    :  0.0000000000e+00
 HiGHS run time      :          0.00
-Writing the solution to /tmp/linopy-solve-ipff6zeo.sol
+Writing the solution to /tmp/linopy-solve-nq0r3bbl.sol
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1992,7 +1992,7 @@ Writing the solution to /tmp/linopy-solve-ipff6zeo.sol
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capacity expansion planning with <code class="docutils literal notranslate"><span class="pre">pypsa</span></code></p>
+        <p class="prev-next-title">Capacity Expansion Planning</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
