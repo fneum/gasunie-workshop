@@ -43,7 +43,7 @@ Compared to building power system by hand in `linopy`, PyPSA does the following 
 | [StorageUnit](https://pypsa.readthedocs.io/en/latest/components.html#storage-unit) | Storage with fixed nominal energy-to-power ratio. |
 | [GlobalConstraint](https://pypsa.readthedocs.io/en/latest/components.html#global-constraints) | Constraints affecting many components at once, such as emission limits. |
 | [Store](https://pypsa.readthedocs.io/en/latest/components.html#store) | Storage with separately extendable energy capacity. |
-|  | **not used in this course** | 
+|  | **not used in this course** |
 | [LineType](https://pypsa.readthedocs.io/en/latest/components.html#line-types) | Standard line types. |
 | [Transformer](https://pypsa.readthedocs.io/en/latest/components.html#transformer) | 2-winding transformer. |
 | [TransformerType](https://pypsa.readthedocs.io/en/latest/components.html#transformer-types) | Standard types of 2-winding transformer. |
